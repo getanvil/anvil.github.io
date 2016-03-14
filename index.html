@@ -188,17 +188,18 @@ editText(() -> {
         <p><b>RenderableAdapter</b> class allows to override getCount(), getItem(int) and view(int) methods to create lists where each item is a standalone reactive renderable object.</li>
       </div>
       <div class="one-half column">
-        <pre><code class="java">public class MyView extends RenderableView {
-    public MyView(Context c) { super(c); }
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        // Initialize your view component
+        <pre><code class="java">public class MyAdapter extends RenderableAdapter {
+    public int getCount() {
+      return 5;
     }
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        // De-initialize your view component
+    public Object getItem(int pos) {
+      return "Line #" + pos;
     }
-    public void view() { /* your layout here */ }
+    public void view(int pos) {
+        textView(() -&gt; {
+            text(getItem(pos));
+        });
+    }
 }</code></pre></div>
     </div>
 
@@ -207,17 +208,17 @@ editText(() -> {
         <p><b>RenderableAdapter.withItems(list, cb)</b> is a shortcut to create simple adapters for the given list of items. <b>cb(index, item)</b> is a lambda that describes the layout and bindings of a certain list item at the given index.</p>
       </div>
       <div class="one-half column">
-        <pre><code class="java">public class MyView extends RenderableView {
-    public MyView(Context c) { super(c); }
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        // Initialize your view component
-    }
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        // De-initialize your view component
-    }
-    public void view() { /* your layout here */ }
+        <pre><code class="java">List&lt;String&gt; myList = getItems();
+RenderableAdapter a =
+  RenderableAdapter.withItems(myList, (i, item) -> {
+    textView(() -&gt; {
+      if (isImportant(i)) {
+        textColor(importantColor);
+      } else {
+        textColor(normalColor);
+      }
+      text(item.toString());
+    });
 }</code></pre></div>
     </div>
 
@@ -227,6 +228,8 @@ editText(() -> {
       </div>
     </div>
   </div>
+
+  <a href="https://github.com/zserge/anvil"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
   <script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>
